@@ -19,10 +19,20 @@ Todo el diseño del sistema está en **[docs/DOCUMENTO_TECNICO.md](docs/DOCUMENT
 9. Riesgos técnicos y mitigaciones
 10. Recomendaciones de mejora
 
+## Cómo correr el pipeline
+
+```
+python -m venv .venv
+.venv\Scripts\python -m pip install -e ".[dev]"
+.venv\Scripts\python -m src.etl.run_all    # descarga, limpia, carga, Elo, rankings
+.venv\Scripts\python -m src.etl.validate   # reporte del gate F1
+.venv\Scripts\python -m pytest             # suite de tests
+```
+
 ## Estado
 
 - [x] Documento técnico de diseño (v1.0 — 2026-06-10)
-- [ ] Fase 1 — Setup e ingesta de datos
+- [x] Fase 1 — Setup e ingesta de datos (gate PASS 2026-06-10: 49 398 partidos, Elo propio r=0.972 vs eloratings.net — ver `outputs/reports/f1_validation.md`)
 - [ ] Fase 2 — EDA y feature engineering
 - [ ] Fase 3 — Modelos estadísticos (Poisson, Dixon-Coles)
 - [ ] Fase 4 — Modelos ML y ensamble
