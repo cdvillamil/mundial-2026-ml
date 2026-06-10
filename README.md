@@ -1,0 +1,31 @@
+# Mundial 2026 ML — Predicción del Mundial FIFA 2026
+
+Proyecto personal y educativo de Machine Learning y analítica deportiva: predicción de marcadores exactos, fase de grupos, avance por rondas y probabilidad de campeón del Mundial FIFA 2026, usando exclusivamente fuentes de datos gratuitas y públicas.
+
+> ⚠️ Proyecto educativo. No está diseñado ni destinado a apuestas deportivas.
+
+## 📄 Documento de diseño
+
+Todo el diseño del sistema está en **[docs/DOCUMENTO_TECNICO.md](docs/DOCUMENTO_TECNICO.md)**:
+
+1. Plan de ejecución (con adaptación al calendario: el torneo inicia el 11-jun-2026)
+2. Arquitectura (Python, Pandas, Scikit-Learn, XGBoost, LightGBM, Streamlit)
+3. Fuentes de datos públicas (Kaggle, GitHub, APIs gratuitas) con plan B por fuente
+4. Diseño de base de datos (SQLite + Parquet)
+5. Pipeline de ML (modelo híbrido GBM-Poisson + Dixon-Coles)
+6. Simulación Monte Carlo del torneo (100k / 500k / 1M corridas)
+7. Validación histórica (backtesting mundiales 2010, 2014, 2018, 2022)
+8. Roadmap en 7 fases con gates de validación
+9. Riesgos técnicos y mitigaciones
+10. Recomendaciones de mejora
+
+## Estado
+
+- [x] Documento técnico de diseño (v1.0 — 2026-06-10)
+- [ ] Fase 1 — Setup e ingesta de datos
+- [ ] Fase 2 — EDA y feature engineering
+- [ ] Fase 3 — Modelos estadísticos (Poisson, Dixon-Coles)
+- [ ] Fase 4 — Modelos ML y ensamble
+- [ ] Fase 5 — Simulador Monte Carlo
+- [ ] Fase 6 — Validación histórica
+- [ ] Fase 7 — Predicción 2026, dashboard y evaluación final
