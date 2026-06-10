@@ -32,7 +32,8 @@ python -m venv .venv
 ## Estado
 
 - [x] Documento técnico de diseño (v1.0 — 2026-06-10)
-- [x] Fase 1 — Setup e ingesta de datos (gate PASS 2026-06-10: 49 398 partidos, Elo propio r=0.972 vs eloratings.net — ver `outputs/reports/f1_validation.md`)
+- [x] Fase 1 — Setup e ingesta de datos (gate PASS: 49 398 partidos, Elo r=0.972 vs eloratings.net)
+- [x] Fase 2 — EDA y feature engineering (gate PASS: 19/19 tests, matriz de features 49k×60, anti-leakage verificado)
 - [ ] Fase 2 — EDA y feature engineering
 - [ ] Fase 3 — Modelos estadísticos (Poisson, Dixon-Coles)
 - [ ] Fase 4 — Modelos ML y ensamble
