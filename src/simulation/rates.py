@@ -9,10 +9,11 @@ class RateProvider:
     (sede neutral, importancia = mundial) usando el GBM-Poisson + Elo."""
 
     def __init__(self, model: GBMPoissonModel, elos: dict[str, float],
-                 tournament_importance: int = 3):
+                 tournament_importance: int = 3, penalty_model=None):
         self.model = model
         self.elos = elos
         self.imp = tournament_importance
+        self.penalty_model = penalty_model
         self._cache: dict[tuple[str, str], np.ndarray] = {}
         self._cumsum: dict[tuple[str, str], tuple[np.ndarray, int]] = {}
 
@@ -33,3 +34,9 @@ class RateProvider:
 
     def elo_diff(self, home: str, away: str) -> float:
         return self.elos[home] - self.elos[away]
+
+    def penalty_p_home(self, home: str, away: str):
+        """P(local gana penales) si hay modelo de penales; si no, None (fallback Elo)."""
+        if self.penalty_model is None:
+            return None
+        return self.penalty_model.predict(self.elo_diff(home, away))

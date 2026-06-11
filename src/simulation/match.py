@@ -34,13 +34,16 @@ def _penalty_winner(rng: np.random.Generator, elo_diff: float) -> int:
 
 
 def knockout_from_cumsum(cumsum: np.ndarray, n: int, rng: np.random.Generator,
-                         elo_diff: float = 0.0) -> int:
-    """Quien avanza (0=local, 1=visitante) desde un cumsum precomputado."""
+                         elo_diff: float = 0.0, pen_p_home: float | None = None) -> int:
+    """Quien avanza (0=local, 1=visitante) desde un cumsum precomputado.
+    Empate -> penales: usa pen_p_home si se da (modelo de datos), si no la formula Elo."""
     i, j = sample_from_cumsum(cumsum, n, rng)
     if i > j:
         return 0
     if j > i:
         return 1
+    if pen_p_home is not None:
+        return 0 if rng.random() < pen_p_home else 1
     return _penalty_winner(rng, elo_diff)
 
 
