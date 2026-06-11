@@ -1,0 +1,111 @@
+note: CAMPO DE EJEMPLO sembrado por Elo. Reemplazar con el sorteo oficial 2026.
+elos:
+  United States: 1825.3
+  Mexico: 1976.0
+  Canada: 1894.5
+  Spain: 2210.7
+  Argentina: 2188.7
+  France: 2121.7
+  England: 2082.5
+  Brazil: 2067.6
+  Colombia: 2062.8
+  Portugal: 2027.3
+  Ecuador: 2026.3
+  Netherlands: 2012.3
+  Germany: 2007.2
+  Japan: 1992.7
+  Morocco: 1984.2
+  Uruguay: 1974.1
+  Belgium: 1971.5
+  Croatia: 1964.1
+  Turkey: 1962.9
+  Switzerland: 1960.6
+  Norway: 1956.7
+  Italy: 1919.3
+  Paraguay: 1917.5
+  Denmark: 1916.2
+  Senegal: 1913.5
+  Australia: 1901.6
+  Iran: 1898.2
+  Austria: 1894.5
+  Nigeria: 1885.6
+  South Korea: 1880.6
+  Algeria: 1872.7
+  Panama: 1847.7
+  Ukraine: 1845.0
+  Russia: 1843.0
+  Scotland: 1833.6
+  Venezuela: 1821.8
+  Uzbekistan: 1820.6
+  Ivory Coast: 1814.5
+  Egypt: 1810.0
+  Chile: 1803.7
+  Czech Republic: 1796.2
+  Serbia: 1789.7
+  Greece: 1787.8
+  Poland: 1777.0
+  Jordan: 1775.1
+  Hungary: 1772.2
+  Peru: 1770.6
+  Sweden: 1765.2
+groups:
+  A:
+  - Spain
+  - Australia
+  - Iran
+  - Sweden
+  B:
+  - Argentina
+  - Senegal
+  - Canada
+  - Peru
+  C:
+  - France
+  - Denmark
+  - Austria
+  - Hungary
+  D:
+  - England
+  - Paraguay
+  - Nigeria
+  - Jordan
+  E:
+  - Brazil
+  - Italy
+  - South Korea
+  - Poland
+  F:
+  - Colombia
+  - Norway
+  - Algeria
+  - Greece
+  G:
+  - Portugal
+  - Switzerland
+  - Panama
+  - Serbia
+  H:
+  - Ecuador
+  - Turkey
+  - Ukraine
+  - Czech Republic
+  I:
+  - Netherlands
+  - Croatia
+  - Russia
+  - Chile
+  J:
+  - Germany
+  - Belgium
+  - Scotland
+  - Egypt
+  K:
+  - Japan
+  - Uruguay
+  - United States
+  - Ivory Coast
+  L:
+  - Morocco
+  - Mexico
+  - Venezuela
+  - Uzbekistan
