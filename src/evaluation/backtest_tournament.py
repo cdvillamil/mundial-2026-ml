@@ -10,6 +10,7 @@ from src.evaluation.historical import (WORLD_CUPS, elos_before, extract_field,
 from src.evaluation.metrics import accuracy_1x2, log_loss_1x2, rps
 from src.features.elo_features import attach_pre_match_elo, tournament_importance
 from src.models.baseline_elo import EloBaseline
+from src.models.dixon_coles import DixonColesModel
 from src.models.gbm_poisson import GBMPoissonModel
 from src.simulation.monte_carlo import simulate_tournament
 from src.simulation.rates import RateProvider
@@ -33,19 +34,21 @@ def _train_models(con, before_date):
                       con, params=[before_date], parse_dates=["date"])
     matches = attach_pre_match_elo(matches, elo)
     gbm = GBMPoissonModel().fit(matches)
+    dc = DixonColesModel().fit(matches)
 
     base_df = matches.assign(outcome=[_outcome(h, a) for h, a in
                                       zip(matches["home_goals"], matches["away_goals"])])
     baseline = EloBaseline().fit(base_df[["elo_diff", "outcome"]])
-    return gbm, baseline
+    return gbm, baseline, dc
 
 
-def _match_level_eval(con, year, start_date, gbm, baseline):
+def _match_level_eval(con, year, start_date, gbm, baseline, dc):
     """Predice cada partido real del Mundial con el modelo pre-torneo."""
     m = wc_matches(con, year)
     teams = sorted(set(m["home_team"]) | set(m["away_team"]))
     elos = elos_before(con, start_date, teams)
     imp = tournament_importance("FIFA World Cup")
+    dc_teams = set(dc.teams_)
 
     actual = np.array([_outcome(r.home_goals, r.away_goals) for r in m.itertuples()])
     gbm_probs = np.array([
@@ -53,9 +56,20 @@ def _match_level_eval(con, year, start_date, gbm, baseline):
         for r in m.itertuples()])
     base_probs = baseline.predict_proba(
         np.array([elos[r.home_team] - elos[r.away_team] for r in m.itertuples()]))
+    # Ensamble GBM+Dixon-Coles (DC solo si ambos equipos tienen parametros)
+    dc_probs = []
+    for r in m.itertuples():
+        if r.home_team in dc_teams and r.away_team in dc_teams:
+            dc_probs.append(dc.predict_proba_1x2(r.home_team, r.away_team, bool(r.neutral)))
+        else:
+            dc_probs.append(None)
+    ens_probs = np.array([
+        (g + d) / 2 if d is not None else g
+        for g, d in zip(gbm_probs, dc_probs)])
     return {
         "n_matches": len(m),
         "gbm_rps": round(rps(gbm_probs, actual), 4),
+        "ens_rps": round(rps(ens_probs, actual), 4),
         "base_rps": round(rps(base_probs, actual), 4),
         "gbm_logloss": round(log_loss_1x2(gbm_probs, actual), 4),
         "gbm_acc": round(accuracy_1x2(gbm_probs, actual), 4),
@@ -89,8 +103,8 @@ def run(n_sims: int = 20000):
     con = sqlite3.connect(DB_PATH)
     rows_match, rows_tourn = [], []
     for year, (start, champion) in WORLD_CUPS.items():
-        gbm, baseline = _train_models(con, start)
-        me = _match_level_eval(con, year, start, gbm, baseline)
+        gbm, baseline, dc = _train_models(con, start)
+        me = _match_level_eval(con, year, start, gbm, baseline, dc)
         te = _tournament_eval(con, year, start, gbm, n_sims, champion)
         rows_match.append({"year": year, **me})
         rows_tourn.append({"year": year, **te})
@@ -107,6 +121,7 @@ def main():
     match_df, tourn_df = run(n_sims=args.n)
 
     wins = int((match_df["gbm_rps"] < match_df["base_rps"]).sum())
+    ens_wins = int((match_df["ens_rps"] < match_df["gbm_rps"]).sum())
     top5 = int(((tourn_df["real_champ_rank"] >= 1) & (tourn_df["real_champ_rank"] <= 5)).sum())
 
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -115,9 +130,10 @@ def main():
         "# Validacion historica (Mundiales 2010, 2014, 2018, 2022)",
         "", f"Simulaciones por torneo: {args.n:,}. Entrenamiento con corte temporal",
         "estricto (solo datos anteriores al inicio de cada Mundial).", "",
-        "## Nivel partido (GBM-Poisson vs baseline Elo)",
+        "## Nivel partido (GBM-Poisson vs baseline Elo vs ensamble GBM+Dixon-Coles)",
         "", match_df.to_markdown(index=False), "",
-        f"GBM gana en RPS en **{wins}/4** mundiales.", "",
+        f"GBM gana en RPS al baseline en **{wins}/4** mundiales.",
+        f"El ensamble GBM+Dixon-Coles mejora al GBM en **{ens_wins}/4** mundiales.", "",
         "## Nivel torneo (ranking de P(campeon))",
         "", tourn_df.to_markdown(index=False), "",
         f"Campeon real en **top-5** de P(campeon) en **{top5}/4** mundiales.", "",
