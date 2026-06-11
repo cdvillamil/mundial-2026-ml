@@ -40,6 +40,21 @@ def test_simulate_tournament_returns_probabilities():
     assert abs(res["p_champion"].sum() - 1.0) < 1e-6
 
 
+def test_simulate_official_2026_runs():
+    import yaml
+
+    from src.config import CONFIGS_DIR
+    from src.simulation.monte_carlo import simulate_official_2026
+
+    field = yaml.safe_load((CONFIGS_DIR / "groups_2026.yaml").read_text(encoding="utf-8"))
+    rp = RateProvider(_model(), {t: float(e) for t, e in field["elos"].items()})
+    res = simulate_official_2026(field["groups"], rp, n_sims=200, seed=1)
+    assert len(res) == 48
+    assert abs(res["p_champion"].sum() - 1.0) < 1e-6
+    assert (res["p_qualify"] <= 1.0).all()
+    assert (res["p_qualify"] >= res["p_r16"]).all()  # acumulado monotono
+
+
 def test_stronger_teams_have_higher_champion_prob():
     model = _model()
     elos, groups = _mini_field()

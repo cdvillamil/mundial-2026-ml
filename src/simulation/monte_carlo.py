@@ -98,6 +98,59 @@ def simulate_tournament(groups: dict, rp: RateProvider, n_sims: int,
     return pd.DataFrame(rows).sort_values("p_champion", ascending=False).reset_index(drop=True)
 
 
+_STAGE_ORDER = {"qualify": 0, "r16": 1, "qf": 2, "sf": 3, "final": 4, "champion": 5}
+
+
+def simulate_official_2026(groups: dict, rp: RateProvider, n_sims: int,
+                           seed: int = 0) -> pd.DataFrame:
+    """Simula el Mundial 2026 con el CUADRO OFICIAL FIFA (12 grupos, 8 terceros)."""
+    from src.simulation.bracket_2026 import assign_thirds, evaluate_bracket
+
+    rng = np.random.default_rng(seed)
+    all_teams = [t for g in groups.values() for t in g]
+    counts = {t: {s: 0 for s in _STAGES} for t in all_teams}
+
+    def decide(home, away):
+        cumsum, n = rp.cumsum(home, away)
+        w = knockout_from_cumsum(cumsum, n, rng, rp.elo_diff(home, away),
+                                 pen_p_home=rp.penalty_p_home(home, away))
+        return home if w == 0 else away
+
+    for _ in range(n_sims):
+        winners, runners, thirds = {}, {}, []
+        for letter, teams in groups.items():
+            order, stats = _simulate_group(teams, rp, rng)
+            winners[letter] = order[0]
+            runners[letter] = order[1]
+            third = order[2]
+            thirds.append({"group": letter, "team": third, **stats[third]})
+
+        rand = {d["group"]: rng.random() for d in thirds}
+        thirds_sorted = sorted(
+            thirds, key=lambda d: (-d["points"], -d["gd"], -d["gf"], rand[d["group"]]))
+        best = thirds_sorted[:8]
+        qual_groups = {d["group"] for d in best}
+        third_team = {d["group"]: d["team"] for d in best}
+
+        assign = assign_thirds(qual_groups)
+        thirds_by_match = {mid: third_team[grp] for mid, grp in assign.items()}
+
+        stages = evaluate_bracket(winners, runners, thirds_by_match, decide)
+        for team, st in stages.items():
+            reached = _STAGE_ORDER[st]
+            for s in _STAGES:
+                if reached >= _STAGE_ORDER[s]:
+                    counts[team][s] += 1
+
+    rows = []
+    for t in all_teams:
+        row = {"team": t}
+        for s in _STAGES:
+            row[f"p_{s}"] = counts[t][s] / n_sims
+        rows.append(row)
+    return pd.DataFrame(rows).sort_values("p_champion", ascending=False).reset_index(drop=True)
+
+
 def _load_field_and_model():
     """Carga grupos+Elo de config y entrena el GBM con todo el historial."""
     import sqlite3
@@ -107,6 +160,8 @@ def _load_field_and_model():
     from src.config import CONFIGS_DIR, DB_PATH
     from src.features.elo_features import attach_pre_match_elo
     from src.models.gbm_poisson import GBMPoissonModel
+
+    from src.models.penalties import build_from_db
 
     field = yaml.safe_load((CONFIGS_DIR / "groups_2026.yaml").read_text(encoding="utf-8"))
     con = sqlite3.connect(DB_PATH)
@@ -118,10 +173,11 @@ def _load_field_and_model():
            WHERE m.date >= '2006-01-01' ORDER BY m.date""", con, parse_dates=["date"])
     elo = pd.read_sql("SELECT t.name AS team, e.date, e.elo FROM elo_history e "
                       "JOIN teams t ON t.team_id=e.team_id", con, parse_dates=["date"])
-    con.close()
     matches = attach_pre_match_elo(matches, elo)
     model = GBMPoissonModel().fit(matches)
-    return field, model
+    penalty_model = build_from_db(con)
+    con.close()
+    return field, model, penalty_model
 
 
 def main():
@@ -134,23 +190,41 @@ def main():
     parser.add_argument("--seed", type=int, default=42)
     args = parser.parse_args()
 
-    field, model = _load_field_and_model()
-    rp = RateProvider(model, {t: float(e) for t, e in field["elos"].items()})
-    res = simulate_tournament(field["groups"], rp, n_sims=args.n,
-                              n_qualify_per_group=2, n_best_thirds=8, seed=args.seed)
+    field, model, penalty_model = _load_field_and_model()
+    rp = RateProvider(model, {t: float(e) for t, e in field["elos"].items()},
+                      penalty_model=penalty_model)
+    official = bool(field.get("official"))
+    if official:
+        res = simulate_official_2026(field["groups"], rp, n_sims=args.n, seed=args.seed)
+    else:
+        res = simulate_tournament(field["groups"], rp, n_sims=args.n,
+                                  n_qualify_per_group=2, n_best_thirds=8, seed=args.seed)
+
+    # intervalo de confianza 95% de P(campeon): p +/- 1.96*sqrt(p(1-p)/N)
+    p = res["p_champion"]
+    se = np.sqrt(p * (1 - p) / args.n)
+    res = res.assign(champ_lo=(p - 1.96 * se).clip(lower=0),
+                     champ_hi=(p + 1.96 * se).clip(upper=1))
 
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     out = REPORTS_DIR / "f5_simulation.md"
     top = res.head(16).copy()
+    ci = top.apply(lambda r: f"{r['p_champion']*100:.1f} "
+                             f"[{r['champ_lo']*100:.1f}-{r['champ_hi']*100:.1f}]", axis=1)
     for c in [c for c in res.columns if c.startswith("p_")]:
         top[c] = (top[c] * 100).round(1)
+    top["campeon_% [IC95]"] = ci.values
+    top = top.drop(columns=["champ_lo", "champ_hi", "p_champion"])
+    fuente = ("SORTEO OFICIAL FIFA (grupos A-L) + cuadro oficial."
+              if official else "CAMPO DE EJEMPLO sembrado por Elo.")
     lines = [
         f"# Simulacion Monte Carlo del Mundial 2026 ({args.n:,} corridas)",
-        "", "CAMPO DE EJEMPLO sembrado por Elo (no es el sorteo oficial).",
-        "Probabilidades en %. Top 16 por P(campeon).", "",
+        "", fuente, "Probabilidades en %. IC95 = intervalo de confianza por Monte Carlo.",
+        "Top 16 por P(campeon).", "",
         top.to_markdown(index=False), "",
         f"**Campeon mas probable: {res.iloc[0]['team']} "
-        f"({res.iloc[0]['p_champion']*100:.1f}%)**",
+        f"({res.iloc[0]['p_champion']*100:.1f}%, IC95 "
+        f"{res.iloc[0]['champ_lo']*100:.1f}-{res.iloc[0]['champ_hi']*100:.1f})**",
     ]
     out.write_text("\n".join(lines), encoding="utf-8")
     print("\n".join(lines))

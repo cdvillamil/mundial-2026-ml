@@ -30,8 +30,9 @@ def main():
     from src.config import PROJECT_ROOT
     from src.simulation.monte_carlo import _load_field_and_model
 
-    field, model = _load_field_and_model()
-    rp = RateProvider(model, {t: float(e) for t, e in field["elos"].items()})
+    field, model, penalty_model = _load_field_and_model()
+    rp = RateProvider(model, {t: float(e) for t, e in field["elos"].items()},
+                      penalty_model=penalty_model)
     df = predict_group_matches(field["groups"], rp)
 
     out_dir = PROJECT_ROOT / "outputs" / "predictions"
