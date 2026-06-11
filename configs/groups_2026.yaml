@@ -1,111 +1,112 @@
-note: CAMPO DE EJEMPLO sembrado por Elo. Reemplazar con el sorteo oficial 2026.
+note: Sorteo OFICIAL Mundial 2026 (grupos A-L). Elo desde la base de datos.
+official: true
 elos:
-  United States: 1825.3
   Mexico: 1976.0
+  South Africa: 1662.3
+  South Korea: 1880.6
+  Czech Republic: 1796.2
   Canada: 1894.5
-  Spain: 2210.7
-  Argentina: 2188.7
-  France: 2121.7
-  England: 2082.5
+  Bosnia and Herzegovina: 1649.1
+  Qatar: 1566.0
+  Switzerland: 1960.6
   Brazil: 2067.6
-  Colombia: 2062.8
-  Portugal: 2027.3
+  Morocco: 1984.2
+  Haiti: 1697.4
+  Scotland: 1833.6
+  United States: 1825.3
+  Paraguay: 1917.5
+  Australia: 1901.6
+  Turkey: 1962.9
+  Germany: 2007.2
+  Curaçao: 1601.1
+  Ivory Coast: 1814.5
   Ecuador: 2026.3
   Netherlands: 2012.3
-  Germany: 2007.2
   Japan: 1992.7
-  Morocco: 1984.2
-  Uruguay: 1974.1
-  Belgium: 1971.5
-  Croatia: 1964.1
-  Turkey: 1962.9
-  Switzerland: 1960.6
-  Norway: 1956.7
-  Italy: 1919.3
-  Paraguay: 1917.5
-  Denmark: 1916.2
-  Senegal: 1913.5
-  Australia: 1901.6
-  Iran: 1898.2
-  Austria: 1894.5
-  Nigeria: 1885.6
-  South Korea: 1880.6
-  Algeria: 1872.7
-  Panama: 1847.7
-  Ukraine: 1845.0
-  Russia: 1843.0
-  Scotland: 1833.6
-  Venezuela: 1821.8
-  Uzbekistan: 1820.6
-  Ivory Coast: 1814.5
-  Egypt: 1810.0
-  Chile: 1803.7
-  Czech Republic: 1796.2
-  Serbia: 1789.7
-  Greece: 1787.8
-  Poland: 1777.0
-  Jordan: 1775.1
-  Hungary: 1772.2
-  Peru: 1770.6
   Sweden: 1765.2
+  Tunisia: 1738.0
+  Belgium: 1971.5
+  Egypt: 1810.0
+  Iran: 1898.2
+  New Zealand: 1731.8
+  Spain: 2210.7
+  Cape Verde: 1653.2
+  Saudi Arabia: 1691.4
+  Uruguay: 1974.1
+  France: 2121.7
+  Senegal: 1913.5
+  Iraq: 1737.8
+  Norway: 1956.7
+  Argentina: 2188.7
+  Algeria: 1872.7
+  Austria: 1894.5
+  Jordan: 1775.1
+  Portugal: 2027.3
+  DR Congo: 1762.6
+  Uzbekistan: 1820.6
+  Colombia: 2062.8
+  England: 2082.5
+  Croatia: 1964.1
+  Ghana: 1624.4
+  Panama: 1847.7
 groups:
   A:
-  - Spain
-  - Australia
-  - Iran
-  - Sweden
-  B:
-  - Argentina
-  - Senegal
-  - Canada
-  - Peru
-  C:
-  - France
-  - Denmark
-  - Austria
-  - Hungary
-  D:
-  - England
-  - Paraguay
-  - Nigeria
-  - Jordan
-  E:
-  - Brazil
-  - Italy
-  - South Korea
-  - Poland
-  F:
-  - Colombia
-  - Norway
-  - Algeria
-  - Greece
-  G:
-  - Portugal
-  - Switzerland
-  - Panama
-  - Serbia
-  H:
-  - Ecuador
-  - Turkey
-  - Ukraine
-  - Czech Republic
-  I:
-  - Netherlands
-  - Croatia
-  - Russia
-  - Chile
-  J:
-  - Germany
-  - Belgium
-  - Scotland
-  - Egypt
-  K:
-  - Japan
-  - Uruguay
-  - United States
-  - Ivory Coast
-  L:
-  - Morocco
   - Mexico
-  - Venezuela
+  - South Africa
+  - South Korea
+  - Czech Republic
+  B:
+  - Canada
+  - Bosnia and Herzegovina
+  - Qatar
+  - Switzerland
+  C:
+  - Brazil
+  - Morocco
+  - Haiti
+  - Scotland
+  D:
+  - United States
+  - Paraguay
+  - Australia
+  - Turkey
+  E:
+  - Germany
+  - Curaçao
+  - Ivory Coast
+  - Ecuador
+  F:
+  - Netherlands
+  - Japan
+  - Sweden
+  - Tunisia
+  G:
+  - Belgium
+  - Egypt
+  - Iran
+  - New Zealand
+  H:
+  - Spain
+  - Cape Verde
+  - Saudi Arabia
+  - Uruguay
+  I:
+  - France
+  - Senegal
+  - Iraq
+  - Norway
+  J:
+  - Argentina
+  - Algeria
+  - Austria
+  - Jordan
+  K:
+  - Portugal
+  - DR Congo
   - Uzbekistan
+  - Colombia
+  L:
+  - England
+  - Croatia
+  - Ghana
+  - Panama
