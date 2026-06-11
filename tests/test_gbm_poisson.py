@@ -4,6 +4,22 @@ import pandas as pd
 from src.models.gbm_poisson import GBMPoissonModel
 
 
+def test_gbm_accepts_weighting_without_error():
+    rng = np.random.default_rng(0)
+    dates = pd.date_range("2010-01-01", periods=400, freq="7D")
+    rows = []
+    for d in dates:
+        he, ae = rng.uniform(1400, 2000), rng.uniform(1400, 2000)
+        rows.append({"date": d, "home_elo": he, "away_elo": ae, "elo_diff": he - ae,
+                     "tournament_importance": 3, "neutral": True,
+                     "home_goals": rng.poisson(np.exp((he - ae) / 600 + 0.2)),
+                     "away_goals": rng.poisson(np.exp((ae - he) / 600))})
+    df = pd.DataFrame(rows)
+    model = GBMPoissonModel(weight_recent=True).fit(df)
+    lh, la = model.predict_lambdas(1900, 1500, 3, False)
+    assert lh > 0 and la > 0
+
+
 def _training_data():
     """Equipos con Elo alto anotan mas; entrenamiento sintetico coherente."""
     rng = np.random.default_rng(0)

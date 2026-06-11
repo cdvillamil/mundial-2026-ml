@@ -37,16 +37,32 @@ def _build_symmetric_rows(matches: pd.DataFrame) -> tuple[pd.DataFrame, np.ndarr
 
 
 class GBMPoissonModel:
-    def __init__(self, rho: float = -0.05, max_iter: int = 200, **kwargs):
+    def __init__(self, rho: float = -0.05, max_iter: int = 200,
+                 weight_recent: bool = True, xi: float = 0.0008, **kwargs):
         self.rho = rho
+        self.weight_recent = weight_recent
+        self.xi = xi  # decaimiento temporal por dia (~half-life 2.4 anos)
         self.model_ = HistGradientBoostingRegressor(
             loss="poisson", max_iter=max_iter, learning_rate=0.05,
             max_depth=4, min_samples_leaf=50, **kwargs
         )
 
+    def _weights(self, matches: pd.DataFrame):
+        """Peso por importancia del torneo y recencia; duplicado (filas simetricas)."""
+        imp_factor = {0: 0.7, 1: 1.0, 2: 1.3, 3: 1.5}
+        w = matches["tournament_importance"].map(imp_factor).fillna(1.0).to_numpy()
+        if "date" in matches.columns:
+            tmax = matches["date"].max()
+            age = (tmax - matches["date"]).dt.days.to_numpy()
+            w = w * np.exp(-self.xi * age)
+        return np.concatenate([w, w])
+
     def fit(self, matches: pd.DataFrame) -> "GBMPoissonModel":
         X, y = _build_symmetric_rows(matches)
-        self.model_.fit(X[_FEATURES], y)
+        sw = None
+        if self.weight_recent and "tournament_importance" in matches.columns:
+            sw = self._weights(matches)
+        self.model_.fit(X[_FEATURES], y, sample_weight=sw)
         return self
 
     def predict_lambdas(self, home_elo, away_elo, tournament_importance, neutral):
