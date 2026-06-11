@@ -16,9 +16,13 @@ def _setup():
 def main():
     st.set_page_config(page_title="Mundial 2026 ML", layout="wide")
     st.title("Prediccion del Mundial FIFA 2026")
-    st.caption("Campo de ejemplo sembrado por Elo (no es el sorteo oficial).")
 
     field, rp, sim = _setup()
+
+    if field.get("official"):
+        st.caption("Sorteo OFICIAL FIFA (grupos A-L) + cuadro oficial.")
+    else:
+        st.caption("Campo de ejemplo sembrado por Elo (no es el sorteo oficial).")
 
     st.header("Probabilidad de ser campeon")
     st.plotly_chart(champion_bar(sim), use_container_width=True)
