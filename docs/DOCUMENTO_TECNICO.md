@@ -488,18 +488,20 @@ Dadas las fechas (torneo: 11 jun – 19 jul 2026), el plan tiene **dos pistas**:
 
 ## 10. Recomendaciones para mejorar el modelo
 
-Ordenadas por relación valor/esfuerzo, para aplicar después del MVP:
+> **Estado tras la Fase 8** (✅ implementada · 🔬 evaluada · ⏳ diferida con razón):
 
-1. **Ensamble de matrices de probabilidad** (Dixon-Coles + GBM-Poisson + CatBoost) con pesos por log-loss: mejora típica pequeña pero consistente.
-2. **Ponderación por importancia del partido** en el entrenamiento (descartar o sub-ponderar amistosos, sobre-ponderar partidos oficiales recientes) — el decaimiento ξ de Dixon-Coles aplicado también al GBM vía `sample_weight`.
-3. **Ratings dinámicos alternativos:** Glicko-2 (incorpora incertidumbre del rating) u offense/defense Elo separados (estilo SPI) como features adicionales.
-4. **Actualización de forma dentro del torneo simulado:** en vez de congelar features al inicio (§6.4), actualizar Elo y forma con los resultados simulados de rondas previas — más realista para P(campeón).
-5. **Features de jugadores más ricas para 2026:** minutos en clubes la temporada 2025-26, lesiones de última hora (flags manuales), % del plantel en su pico de edad (24–29).
-6. **Modelo de penales mejorado:** entrenar con `shootouts.csv` (experiencia previa en tandas, Elo) en lugar de moneda al aire.
-7. **Calibración por contexto:** calibradores separados para fase de grupos vs eliminatorias, y para partidos parejos (|Δelo| < 50) vs dispares.
-8. **Tracking con MLflow local** desde F4: cada experimento con métricas, parámetros y artefactos — gratis y enseña MLOps real.
-9. **Intervalos de incertidumbre:** bootstrap sobre el conjunto de entrenamiento para reportar P(campeón) con banda de confianza, no solo punto.
-10. **Publicación educativa:** dashboard en Streamlit Community Cloud (gratis) + informe final en el README del repo comparando predicho vs real del Mundial 2026 — cierre perfecto del ciclo de aprendizaje.
+1. ✅/🔬 **Ensamble de matrices de probabilidad** (Dixon-Coles + GBM-Poisson): implementado y **evaluado en backtest**; solo mejora 1/4 mundiales, por lo que se mantiene el GBM solo (DC añade ruido para selecciones con poca historia). CatBoost diferido (sin wheel para Python 3.14).
+2. ✅ **Ponderación por importancia del partido**: implementada en el GBM vía `sample_weight` = factor de importancia × decaimiento temporal exp(−ξ·días).
+3. ⏳ **Ratings dinámicos alternativos** (Glicko-2 / offense-defense): diferido — siguiente iteración.
+4. ⏳ **Actualización de forma dentro del torneo simulado:** diferido (interacción compleja con el cuadro oficial); anotado como siguiente iteración.
+5. ⏳ **Features de jugadores más ricas:** diferido — cobertura gratuita pobre y no histórica (requeriría scraping frágil de Transfermarkt).
+6. ✅ **Modelo de penales mejorado:** implementado — P(gana la tanda) ajustado con el histórico real de `shootouts` vs diferencia de Elo (`src/models/penalties.py`).
+7. ⏳ **Calibración por contexto:** diferido — siguiente iteración (ya existe el calibrador isotónico global de la Fase 4).
+8. ⏳ **Tracking con MLflow local:** diferido — infraestructura; el proyecto ya versiona un reporte por fase en `outputs/reports/`.
+9. ✅ **Intervalos de incertidumbre:** implementado — P(campeón) se reporta con IC95 de Monte Carlo (`p ± 1.96·√(p(1−p)/N)`) en `f5_simulation.md`.
+10. ✅ **Publicación educativa:** dashboard (HTML Plotly + app Streamlit) + repo público con un informe por fase y marco de evaluación predicho-vs-real listo para el Mundial 2026.
+
+**Sorteo oficial (Fase 8):** el simulador usa los grupos A-L reales y el cuadro oficial FIFA (matriz de terceros + árbol P73–P102), no un campo de ejemplo. Reemplazable regenerando `configs/groups_2026.yaml`.
 
 ---
 

@@ -26,7 +26,7 @@ python -m venv .venv
 .venv\Scripts\python -m pip install -e ".[dev]"
 .venv\Scripts\python -m src.etl.run_all              # descarga, limpia, carga, Elo, rankings
 .venv\Scripts\python -m src.etl.validate             # reporte del gate F1
-.venv\Scripts\python -m src.simulation.build_field   # campo de 48 equipos (ejemplo)
+.venv\Scripts\python -m src.simulation.build_field_official   # sorteo OFICIAL 2026 (grupos A-L)
 .venv\Scripts\python -m src.simulation.monte_carlo --n 100000   # ¿quién será campeón?
 .venv\Scripts\python -m src.inference.predict_2026   # marcadores de la fase de grupos
 .venv\Scripts\python -m pytest                       # suite de tests (64)
@@ -68,6 +68,22 @@ el GBM-Poisson **supera al baseline Elo en RPS en los 4 mundiales** (2010–2022
 - [x] Fase 4 — Modelos ML y ensamble (gate PASS: GBM-Poisson con Elo point-in-time mejora RPS 0.360→0.341 y accuracy 58%→60%, ECE 0.009; 43/43 tests — ver `outputs/reports/f4_model_comparison.md`)
 - [x] Fase 5 — Simulador Monte Carlo (gate PASS: 48 equipos/12 grupos/8 terceros, desempates FIFA testeados, 100k corridas; campeón más probable España 23% en campo de ejemplo; 57/57 tests — ver `outputs/reports/f5_simulation.md`)
 - [x] Fase 6 — Validación histórica (gate PASS 4/4: GBM supera al baseline Elo en RPS en los 4 mundiales; campeón real en top-5 de P(campeón) en los 4 — España #2, Alemania #3, Francia #5, Argentina #2; grupos reales reconstruidos; 58/58 tests — ver `outputs/reports/f6_historical_validation.md`)
-- [x] Fase 7 — Predicción 2026, dashboard y evaluación final (gate PASS: 72 predicciones de grupos pre-registradas, dashboard HTML+Streamlit, marco de evaluación predicho-vs-real; 64/64 tests — ver `outputs/reports/f7_dashboard.html`)
+- [x] Fase 7 — Predicción 2026, dashboard y evaluación final (gate PASS: 72 predicciones de grupos pre-registradas, dashboard HTML+Streamlit, marco de evaluación predicho-vs-real; tests — ver `outputs/reports/f7_dashboard.html`)
+- [x] Fase 8 — Sorteo oficial + robustez (gate PASS: grupos A-L reales + cuadro oficial FIFA con matriz de terceros, ponderación recencia/importancia en el GBM, penales basados en datos, ensamble evaluado, intervalos de confianza; 71/71 tests; campeón más probable **España 17.6%** con el sorteo oficial)
 
-**🎉 Proyecto completo: las 7 fases superaron su gate de validación.**
+**🎉 Proyecto completo: las 8 fases superaron su gate de validación.**
+
+## Mejoras de robustez (Fase 8)
+
+**Implementadas:**
+- **Sorteo oficial 2026**: grupos A-L reales + cuadro oficial FIFA (matriz de asignación de terceros vía matching bipartito + árbol P73–P102). Reemplaza el campo de ejemplo y el bracket sembrado.
+- **Ponderación por recencia e importancia** en el GBM-Poisson (`sample_weight`): los partidos recientes y de mayor jerarquía pesan más.
+- **Modelo de penales basado en datos**: P(gana la tanda) ajustado con el histórico real de tandas (`shootouts`), en vez de moneda al aire.
+- **Ensamble GBM + Dixon-Coles**: evaluado en backtest. Conclusión honesta: solo mejora 1/4 mundiales → se mantiene el GBM solo (DC añade ruido para selecciones con poca historia).
+- **Intervalos de confianza** (Monte Carlo) sobre P(campeón).
+
+**Diferidas (con razón):**
+- Valores de mercado / minutos / lesiones de jugadores: cobertura gratuita pobre y no histórica (requeriría scraping frágil).
+- CatBoost: sin wheel estable para Python 3.14 (HistGB-Poisson cumple el rol).
+- MLflow: infraestructura; el proyecto ya versiona reportes por fase.
+- Ratings dinámicos intra-torneo y calibración por contexto: anotadas como siguiente iteración.
