@@ -37,5 +37,5 @@ python -m venv .venv
 - [x] Fase 3 — Modelos estadísticos (Poisson, Dixon-Coles, baseline Elo, métricas RPS/log-loss/Brier, backtest temporal 2018; 34/34 tests — ver `outputs/reports/f3_model_comparison.md`)
 - [x] Fase 4 — Modelos ML y ensamble (gate PASS: GBM-Poisson con Elo point-in-time mejora RPS 0.360→0.341 y accuracy 58%→60%, ECE 0.009; 43/43 tests — ver `outputs/reports/f4_model_comparison.md`)
 - [x] Fase 5 — Simulador Monte Carlo (gate PASS: 48 equipos/12 grupos/8 terceros, desempates FIFA testeados, 100k corridas; campeón más probable España 23% en campo de ejemplo; 57/57 tests — ver `outputs/reports/f5_simulation.md`)
-- [ ] Fase 6 — Validación histórica
+- [x] Fase 6 — Validación histórica (gate PASS 4/4: GBM supera al baseline Elo en RPS en los 4 mundiales; campeón real en top-5 de P(campeón) en los 4 — España #2, Alemania #3, Francia #5, Argentina #2; grupos reales reconstruidos; 58/58 tests — ver `outputs/reports/f6_historical_validation.md`)
 - [ ] Fase 7 — Predicción 2026, dashboard y evaluación final
