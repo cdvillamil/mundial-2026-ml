@@ -36,6 +36,6 @@ python -m venv .venv
 - [x] Fase 2 — EDA y feature engineering (gate PASS: 19/19 tests, matriz de features 49k×60, anti-leakage verificado)
 - [x] Fase 3 — Modelos estadísticos (Poisson, Dixon-Coles, baseline Elo, métricas RPS/log-loss/Brier, backtest temporal 2018; 34/34 tests — ver `outputs/reports/f3_model_comparison.md`)
 - [x] Fase 4 — Modelos ML y ensamble (gate PASS: GBM-Poisson con Elo point-in-time mejora RPS 0.360→0.341 y accuracy 58%→60%, ECE 0.009; 43/43 tests — ver `outputs/reports/f4_model_comparison.md`)
-- [ ] Fase 5 — Simulador Monte Carlo
+- [x] Fase 5 — Simulador Monte Carlo (gate PASS: 48 equipos/12 grupos/8 terceros, desempates FIFA testeados, 100k corridas; campeón más probable España 23% en campo de ejemplo; 57/57 tests — ver `outputs/reports/f5_simulation.md`)
 - [ ] Fase 6 — Validación histórica
 - [ ] Fase 7 — Predicción 2026, dashboard y evaluación final
