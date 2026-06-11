@@ -6,7 +6,7 @@ import pandas as pd
 
 from src.simulation.group_stage import rank_best_thirds, rank_group
 from src.simulation.knockout import propagate_bracket, seed_qualifiers
-from src.simulation.match import sample_knockout, sample_score
+from src.simulation.match import knockout_from_cumsum, sample_from_cumsum
 from src.simulation.rates import RateProvider
 
 # etapas que se contabilizan
@@ -22,7 +22,8 @@ def _simulate_group(teams, rp: RateProvider, rng):
     """Simula los partidos del grupo y devuelve (orden, stats_por_equipo)."""
     results = []
     for h, a in _round_robin(teams):
-        hg, ag = sample_score(rp.matrix(h, a), rng)
+        cumsum, n = rp.cumsum(h, a)
+        hg, ag = sample_from_cumsum(cumsum, n, rng)
         results.append({"home": h, "away": a, "hg": hg, "ag": ag})
     order = rank_group(list(teams), results, rng)
 
@@ -75,7 +76,8 @@ def simulate_tournament(groups: dict, rp: RateProvider, n_sims: int,
         bracket = seed_qualifiers(ranked)
 
         def decide(home, away):
-            w = sample_knockout(rp.matrix(home, away), rng, rp.elo_diff(home, away))
+            cumsum, n = rp.cumsum(home, away)
+            w = knockout_from_cumsum(cumsum, n, rng, rp.elo_diff(home, away))
             return home if w == 0 else away
 
         rounds = propagate_bracket(bracket, decide)

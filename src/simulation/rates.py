@@ -14,6 +14,7 @@ class RateProvider:
         self.elos = elos
         self.imp = tournament_importance
         self._cache: dict[tuple[str, str], np.ndarray] = {}
+        self._cumsum: dict[tuple[str, str], tuple[np.ndarray, int]] = {}
 
     def matrix(self, home: str, away: str) -> np.ndarray:
         key = (home, away)
@@ -21,6 +22,14 @@ class RateProvider:
             self._cache[key] = self.model.predict_score_matrix(
                 self.elos[home], self.elos[away], self.imp, neutral=True)
         return self._cache[key]
+
+    def cumsum(self, home: str, away: str) -> tuple[np.ndarray, int]:
+        """Cumsum aplanado (cacheado) para muestreo rapido del emparejamiento."""
+        from src.simulation.match import build_cumsum
+        key = (home, away)
+        if key not in self._cumsum:
+            self._cumsum[key] = build_cumsum(self.matrix(home, away))
+        return self._cumsum[key]
 
     def elo_diff(self, home: str, away: str) -> float:
         return self.elos[home] - self.elos[away]
