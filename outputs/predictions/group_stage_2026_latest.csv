@@ -1,0 +1,73 @@
+group,home,away,p_home,p_draw,p_away,most_likely,score_prob
+A,Spain,Australia,0.684,0.2171,0.0989,1-0,0.1602
+A,Spain,Iran,0.684,0.2171,0.0989,1-0,0.1602
+A,Spain,Sweden,0.797,0.1495,0.0534,2-0,0.1627
+A,Australia,Iran,0.3651,0.297,0.3378,1-1,0.1392
+A,Australia,Sweden,0.4914,0.2825,0.2262,1-0,0.1358
+A,Iran,Sweden,0.4914,0.2825,0.2262,1-0,0.1358
+B,Argentina,Senegal,0.6423,0.235,0.1227,1-0,0.1561
+B,Argentina,Canada,0.6815,0.2187,0.0999,1-0,0.1611
+B,Argentina,Peru,0.7981,0.1491,0.0528,2-0,0.1635
+B,Senegal,Canada,0.3879,0.2975,0.3146,1-1,0.139
+B,Senegal,Peru,0.4903,0.2824,0.2272,1-0,0.1353
+B,Canada,Peru,0.4959,0.2805,0.2236,1-0,0.1352
+C,France,Denmark,0.5545,0.2605,0.185,1-0,0.1357
+C,France,Austria,0.599,0.2432,0.1579,1-0,0.1348
+C,France,Hungary,0.6929,0.2063,0.1008,2-0,0.1464
+C,Denmark,Austria,0.3879,0.2975,0.3146,1-1,0.139
+C,Denmark,Hungary,0.5068,0.2752,0.2179,1-0,0.1327
+C,Austria,Hungary,0.4959,0.2805,0.2236,1-0,0.1352
+D,England,Paraguay,0.5487,0.2595,0.1918,1-0,0.1305
+D,England,Nigeria,0.5798,0.2576,0.1626,1-0,0.1479
+D,England,Jordan,0.6774,0.213,0.1096,2-0,0.1422
+D,Paraguay,Nigeria,0.3886,0.2977,0.3137,1-1,0.139
+D,Paraguay,Jordan,0.4903,0.2824,0.2272,1-0,0.1353
+D,Nigeria,Jordan,0.4899,0.2841,0.2261,1-0,0.1374
+E,Brazil,Italy,0.5123,0.2685,0.2192,1-1,0.127
+E,Brazil,South Korea,0.5636,0.2588,0.1775,1-0,0.1387
+E,Brazil,Poland,0.6557,0.225,0.1193,1-0,0.1471
+E,Italy,South Korea,0.3886,0.2977,0.3137,1-1,0.139
+E,Italy,Poland,0.4903,0.2824,0.2272,1-0,0.1353
+E,South Korea,Poland,0.4762,0.283,0.2408,1-1,0.1325
+F,Colombia,Norway,0.4881,0.2747,0.2372,1-1,0.1299
+F,Colombia,Algeria,0.5636,0.2588,0.1775,1-0,0.1387
+F,Colombia,Greece,0.6563,0.2249,0.1188,1-0,0.1475
+F,Norway,Algeria,0.4579,0.2865,0.2557,1-1,0.1342
+F,Norway,Greece,0.5558,0.2611,0.1832,1-0,0.1375
+F,Algeria,Greece,0.443,0.295,0.262,1-1,0.1365
+G,Portugal,Switzerland,0.4011,0.2871,0.3118,1-1,0.136
+G,Portugal,Panama,0.5525,0.2631,0.1844,1-0,0.1389
+G,Portugal,Serbia,0.6174,0.2408,0.1418,1-0,0.1452
+G,Switzerland,Panama,0.4993,0.2783,0.2223,1-0,0.1336
+G,Switzerland,Serbia,0.5558,0.2611,0.1832,1-0,0.1375
+G,Panama,Serbia,0.3877,0.3011,0.3112,1-1,0.1397
+H,Ecuador,Turkey,0.4087,0.2888,0.3025,1-1,0.1364
+H,Ecuador,Ukraine,0.5549,0.263,0.1822,1-0,0.1402
+H,Ecuador,Czech Republic,0.6174,0.2408,0.1418,1-0,0.1452
+H,Turkey,Ukraine,0.5,0.2784,0.2217,1-0,0.134
+H,Turkey,Czech Republic,0.5558,0.2611,0.1832,1-0,0.1375
+H,Ukraine,Czech Republic,0.3792,0.3038,0.317,1-1,0.1403
+I,Netherlands,Croatia,0.3942,0.2934,0.3123,1-1,0.138
+I,Netherlands,Russia,0.5511,0.2631,0.1857,1-0,0.1381
+I,Netherlands,Chile,0.6053,0.2448,0.1499,1-0,0.143
+I,Croatia,Russia,0.5,0.2784,0.2217,1-0,0.134
+I,Croatia,Chile,0.5517,0.2612,0.1871,1-0,0.1352
+I,Russia,Chile,0.3792,0.3038,0.317,1-1,0.1403
+J,Germany,Belgium,0.3942,0.2934,0.3123,1-1,0.138
+J,Germany,Scotland,0.5602,0.2604,0.1795,1-0,0.1391
+J,Germany,Egypt,0.5772,0.2597,0.1631,1-0,0.1497
+J,Belgium,Scotland,0.5005,0.2781,0.2213,1-0,0.1339
+J,Belgium,Egypt,0.5517,0.2612,0.1871,1-0,0.1352
+J,Scotland,Egypt,0.3804,0.3042,0.3154,1-1,0.1403
+K,Japan,Uruguay,0.3866,0.2914,0.322,1-1,0.1375
+K,Japan,United States,0.5569,0.2605,0.1826,1-0,0.1373
+K,Japan,Ivory Coast,0.5595,0.2609,0.1796,1-0,0.1396
+K,Uruguay,United States,0.5193,0.27,0.2107,1-0,0.1311
+K,Uruguay,Ivory Coast,0.5517,0.2612,0.1871,1-0,0.1352
+K,United States,Ivory Coast,0.3551,0.3028,0.3421,1-1,0.1404
+L,Morocco,Mexico,0.3608,0.2899,0.3493,1-1,0.1372
+L,Morocco,Venezuela,0.5528,0.2607,0.1865,1-0,0.135
+L,Morocco,Uzbekistan,0.5528,0.2607,0.1865,1-0,0.135
+L,Mexico,Venezuela,0.5389,0.2612,0.1999,1-0,0.1275
+L,Mexico,Uzbekistan,0.5389,0.2612,0.1999,1-0,0.1275
+L,Venezuela,Uzbekistan,0.35,0.3,0.35,1-1,0.1399
