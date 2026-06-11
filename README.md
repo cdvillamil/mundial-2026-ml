@@ -35,7 +35,7 @@ python -m venv .venv
 - [x] Fase 1 — Setup e ingesta de datos (gate PASS: 49 398 partidos, Elo r=0.972 vs eloratings.net)
 - [x] Fase 2 — EDA y feature engineering (gate PASS: 19/19 tests, matriz de features 49k×60, anti-leakage verificado)
 - [x] Fase 3 — Modelos estadísticos (Poisson, Dixon-Coles, baseline Elo, métricas RPS/log-loss/Brier, backtest temporal 2018; 34/34 tests — ver `outputs/reports/f3_model_comparison.md`)
-- [ ] Fase 4 — Modelos ML y ensamble
+- [x] Fase 4 — Modelos ML y ensamble (gate PASS: GBM-Poisson con Elo point-in-time mejora RPS 0.360→0.341 y accuracy 58%→60%, ECE 0.009; 43/43 tests — ver `outputs/reports/f4_model_comparison.md`)
 - [ ] Fase 5 — Simulador Monte Carlo
 - [ ] Fase 6 — Validación histórica
 - [ ] Fase 7 — Predicción 2026, dashboard y evaluación final
